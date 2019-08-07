@@ -31,6 +31,10 @@ int x2 = 70 , y2 = 9;
 
 int i,v;
 
+int dd=0;
+bool disparo = false;
+int xb;
+
 int repeticion = 0 , nivel = 1;
 bool condicion = false;
 
@@ -87,9 +91,9 @@ void Explocion(void)
 
 void jugar(void)
 {
+   if(!disparo) xb = ix;
+   gotoxy(xb+3 , iy + dd); printf("*");
 // Asteroide
-
-
    gotoxy(x,y); printf("%c",2);
    gotoxy(xx,yy); printf("%c",2);
    gotoxy(x1,y1); printf("%c",2);
@@ -102,29 +106,38 @@ void jugar(void)
    gotoxy(x1,y1); printf(" ");
    gotoxy(x2,y2); printf(" ");
 
-   if (y > 20)
+   gotoxy(xb+3 , iy + dd); printf(" ");
+   if(disparo == true) dd--;
+   if(iy + dd < 5 ){
+    dd =0;
+    disparo = false;
+   }
+
+   if (y > 20 || x == xb+3 && iy + dd <= y)
    {
        y = 4;
        x = (rand() % 70) +6;
 
+       if (y == 4)
+        condicion = false;
+
    }
-   if (yy > 20)
+   if (yy > 20 || xx == xb+3 && iy + dd <= yy)
    {
        yy = 4;
        xx = (rand() % 70) +6;
    }
-   if (y1 > 20)
+   if (y1 > 20 || x1 == xb+3 && iy + dd <= y1)
    {
        y1 = 4;
        x1 = (rand() % 70) +6;
    }
-   if (y2 > 20)
+   if (y2 > 20 || x2 == xb+3 && iy + dd <= y2)
    {
        y2 = 4;
        x2 = (rand() % 70) +6;
    }
 // Mover Nave
-
 if(kbhit())
 {
     unsigned char tecla = getch();
@@ -162,6 +175,10 @@ if(kbhit())
             gotoxy(ix,iy+2);puts(avion_l3);
         }
         break;
+
+    case 'd':
+            disparo = true;
+            break;
     }
 }
 // Impacto Asteroide
@@ -187,6 +204,32 @@ if(!Corazones)
     Barra_Salud(Corazones);
 }
 
+// Niveles
+if(!condicion)
+{
+    repeticion ++;
+    condicion = true;
+}
+
+if(repeticion == 10)
+{
+    nivel++;
+    gotoxy(35,1); printf("NIVEL %i",nivel);
+
+    gotoxy(ix,iy); puts(borrar_avion);
+    gotoxy(ix,iy+1); puts(borrar_avion);
+    gotoxy(ix,iy+2); puts(borrar_avion);
+
+    iy -= 2;
+
+    gotoxy(ix,iy); puts(avion_l1);
+    gotoxy(ix,iy+1); puts(avion_l2);
+    gotoxy(ix,iy+2); puts(avion_l3);
+
+    repeticion = 0;
+
+}
+
    y++;
    yy++;
    y1++;
@@ -198,16 +241,18 @@ int main()
 {
     vidas(Num_vidas);
     Barra_Salud(Corazones);
+    gotoxy(35,1); printf("NIVEL %i",nivel);
 
     gotoxy(ix,iy);puts(avion_l1);
     gotoxy(ix,iy+1);puts(avion_l2);
     gotoxy(ix,iy+2);puts(avion_l3);
 
-    while(Num_vidas> 0 )
-
+    while(Num_vidas> 0 && nivel <= 6)
         jugar();
 
+    gotoxy(20,15); printf("GAME OVER");
 
+    Sleep(200);
     getch();
     return 0;
 }
