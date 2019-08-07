@@ -60,7 +60,7 @@ void Barra_Salud(int n)
 
     for(v = 0 ; v < n ; v++)
     {
-         gotoxy(72+v,1);
+         gotoxy(72+v ,1);
          printf("%c",3);
     }
 }
@@ -87,7 +87,8 @@ void Explocion(void)
 
 void jugar(void)
 {
-    //Asteroide
+// Asteroide
+
 
    gotoxy(x,y); printf("%c",2);
    gotoxy(xx,yy); printf("%c",2);
@@ -122,20 +123,92 @@ void jugar(void)
        y2 = 4;
        x2 = (rand() % 70) +6;
    }
+// Mover Nave
 
+if(kbhit())
+{
+    unsigned char tecla = getch();
+
+    switch (tecla)
+    {
+    case IZQUIERDA:
+
+        if( ix > 4)
+        {
+            gotoxy(ix,iy); puts(borrar_avion);
+            gotoxy(ix,iy+1); puts(borrar_avion);
+            gotoxy(ix,iy+2); puts(borrar_avion);
+
+            ix -=2;
+
+            gotoxy(ix,iy); puts(avion_l1);
+            gotoxy(ix,iy+1); puts(avion_l2);
+            gotoxy(ix,iy+2); puts(avion_l3);
+        }
+        break;
+
+    case DERECHA:
+
+        if( ix < 70)
+        {
+            gotoxy(ix,iy); puts(borrar_avion);
+            gotoxy(ix,iy+1); puts(borrar_avion);
+            gotoxy(ix,iy+2); puts(borrar_avion);
+
+            ix +=2;
+
+            gotoxy(ix,iy);puts(avion_l1);
+            gotoxy(ix,iy+1);puts(avion_l2);
+            gotoxy(ix,iy+2);puts(avion_l3);
+        }
+        break;
+    }
+}
+// Impacto Asteroide
+if( ( x > ix && x<ix + 6 && y == iy-1) || ( xx > ix && xx<ix + 6 && yy == iy-1)
+    || ( x1 > ix && x1<ix + 6 && y1 == iy-1) || ( x2 > ix && x2<ix + 6 && y2 == iy-1) )
+    {
+        Corazones --;
+        Barra_Salud(Corazones);
+        printf("\a");
+    }
+
+            gotoxy(ix,iy);puts(avion_l1);
+            gotoxy(ix,iy+1);puts(avion_l2);
+            gotoxy(ix,iy+2);puts(avion_l3);
+
+if(!Corazones)
+{
+    Num_vidas--;
+    vidas(Num_vidas);
+    Explocion();
+    Corazones = 3;
+
+    Barra_Salud(Corazones);
+}
 
    y++;
    yy++;
    y1++;
    y2++;
+
 }
 
 int main()
 {
-    vidas(5);
-    Barra_Salud(4);
-    Explocion();
-    jugar();
+    vidas(Num_vidas);
+    Barra_Salud(Corazones);
+
+    gotoxy(ix,iy);puts(avion_l1);
+    gotoxy(ix,iy+1);puts(avion_l2);
+    gotoxy(ix,iy+2);puts(avion_l3);
+
+    while(Num_vidas> 0 )
+
+        jugar();
+
+
     getch();
+    return 0;
 }
 

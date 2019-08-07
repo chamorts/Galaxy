@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1565097891 source:c:\xampp\htdocs\githubv2\galaxy\main.cpp
+1565146967 source:c:\xampp\htdocs\githubv2\galaxy\main.cpp
 	<windows.h>
 	<iostream>
 	<conio.h>
